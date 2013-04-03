@@ -62,18 +62,20 @@ namespace ariadne_skein
                 Environment.Exit(1);
             }
 
-            Queue<Point> willVisit = new Queue<Point>();
+            Queue<BreadCrumb> willVisit = new Queue<BreadCrumb>();
             HashSet<Point> hasVisited = new HashSet<Point>();
 
-            willVisit.Enqueue(start.GetValueOrDefault());
+            willVisit.Enqueue(new BreadCrumb(start.GetValueOrDefault()));
             hasVisited.Add(start.GetValueOrDefault());
 
             while (willVisit.Count != 0)
             {
-                Point current = willVisit.Dequeue();
+                BreadCrumb bc = willVisit.Dequeue();
+                Point current = bc.Current;
                 if (current == end)
                 {
                     Console.WriteLine("Found!");
+                    //foreach (var 
                     return;
                 }
                 foreach (var p in NeighborOf(maze, current))
@@ -81,7 +83,7 @@ namespace ariadne_skein
                     if (!hasVisited.Contains(p))
                     {
                         hasVisited.Add(p);
-                        willVisit.Enqueue(p);
+                        willVisit.Enqueue(new BreadCrumb(current, bc));
                     }
                 }
             }
