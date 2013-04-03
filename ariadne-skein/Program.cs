@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Drawing;
 
 namespace ariadne_skein
 {
@@ -9,23 +10,26 @@ namespace ariadne_skein
     {
         static void Main(string[] args)
         {
+            // read input file
             System.IO.StreamReader input = new System.IO.StreamReader(args[0]);
             
             String line;
-            int w = 0, h = 0;
+            int row = 0, col = 0;
             int i, j;
+            Point? start = null,
+                    end = null;
 
             while ((line = input.ReadLine()) != null)
             {
-                ++h;
-                w = Math.Max(w, line.Length);
+                ++row;
+                col = Math.Max(col, line.Length);
             }
             input.Close();
 
-            char[,] maze = new char[w, h];
-            for (j = 0; j < h; ++j)
+            char[,] maze = new char[row, col];
+            for (j = 0; j < col; ++j)
             {
-                for (i = 0; i < w; ++i)
+                for (i = 0; i < row; ++i)
                 {
                     maze[i, j] = ' ';
                 }
@@ -38,12 +42,74 @@ namespace ariadne_skein
             {
                 foreach (var c in line)
                 {
-                    maze[w, h++] = c;
+                    maze[i, j++] = c;
+                    if (c == 's')
+                    {
+                        start = new Point(i, j - 1);
+                    }
+                    if (c == 'e')
+                    {
+                        end = new Point(i, j--);
+                    }
                 }
-                ++w;
-                h = 0;
+                ++i;
+                j = 0;
             }
-            
+
+            if (start == null || end == null)
+            {
+                Console.WriteLine("Need start and end point");
+                Environment.Exit(1);
+            }
+
+            Queue<Point> willVisit = new Queue<Point>();
+            HashSet<Point> hasVisited = new HashSet<Point>();
+
+            willVisit.Enqueue(start.GetValueOrDefault());
+            hasVisited.Add(start.GetValueOrDefault());
+
+            while (willVisit.Count != 0)
+            {
+                Point current = willVisit.Dequeue();
+                if (current == end)
+                {
+                    Console.WriteLine("Found!");
+                    return;
+                }
+                foreach (var p in NeighborOf(maze, current))
+                {
+                    if (!hasVisited.Contains(p))
+                    {
+                        hasVisited.Add(p);
+                        willVisit.Enqueue(p);
+                    }
+                }
+            }
+
+        }
+
+        private static IEnumerable<Point> NeighborOf(char[,] maze, Point point)
+        {
+            for (int x = -1; x <= 1; ++x)
+            {
+                for (int y = -1; y <= 1; ++y)
+                {
+                    if (x == 0 && y == 0)
+                    {
+                        continue;
+                    }
+                    try
+                    {
+                        int t = maze[point.X - x, point.Y - y];
+                    }
+                    catch (IndexOutOfRangeException)
+                    {
+                        continue;
+                    }
+                    yield return new Point(point.X - x, point.Y - y);
+                }
+            }
+            yield break;
         }
     }
 }
