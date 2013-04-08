@@ -75,7 +75,12 @@ namespace ariadne_skein
                 if (current == end)
                 {
                     Console.WriteLine("Found!");
-                    //foreach (var 
+                    Stack<Point> path = bc.BackTrack();
+                    while (path.Count != 0)
+                    {
+                        Console.WriteLine(path.Pop().ToString());
+                    }
+                    Console.ReadLine();
                     return;
                 }
                 foreach (var p in NeighborOf(maze, current))
@@ -83,32 +88,48 @@ namespace ariadne_skein
                     if (!hasVisited.Contains(p))
                     {
                         hasVisited.Add(p);
-                        willVisit.Enqueue(new BreadCrumb(current, bc));
+                        willVisit.Enqueue(new BreadCrumb(p, bc));
                     }
                 }
             }
 
+            Console.WriteLine("Not found!");
+            Console.ReadLine();
         }
 
         private static IEnumerable<Point> NeighborOf(char[,] maze, Point point)
         {
+#if DEBUG
+            Console.WriteLine("New NeighborOf");
+#endif
             for (int x = -1; x <= 1; ++x)
             {
+                int newX = point.X + x;
+#if DEBUG
+                Console.WriteLine("NewX: " + newX);
+#endif
+                if (newX < 0 || newX > maze.GetLength(0))
+                {
+                    continue;
+                }
                 for (int y = -1; y <= 1; ++y)
                 {
+                    int newY = point.Y + y;
+#if DEBUG
+                    Console.WriteLine("NewY: " + newY);
+#endif
+                    if (newY < 0 || newY > maze.GetLength(1))
+                    {
+                        continue;
+                    }
                     if (x == 0 && y == 0)
                     {
                         continue;
                     }
-                    try
-                    {
-                        int t = maze[point.X - x, point.Y - y];
-                    }
-                    catch (IndexOutOfRangeException)
-                    {
-                        continue;
-                    }
-                    yield return new Point(point.X - x, point.Y - y);
+#if DEBUG
+                    Console.WriteLine("Yield!");
+#endif
+                    yield return new Point(newX, newY);
                 }
             }
             yield break;

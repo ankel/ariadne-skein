@@ -32,14 +32,14 @@ namespace ariadne_skein
             ComeFrom = null;
         }
 
-        public List<Point> backTrack()
+        public Stack<Point> BackTrack()
         {
-            List<Point> retVal = new List<Point>();
-            retVal.Add(Current);
+            Stack<Point> retVal = new Stack<Point>();
+            retVal.Push(Current);
             BreadCrumb temp = ComeFrom;
             while (temp != null)
             {
-                retVal.Add(temp.Current);
+                retVal.Push(temp.Current);
                 temp = temp.ComeFrom;
             }
             return retVal;
