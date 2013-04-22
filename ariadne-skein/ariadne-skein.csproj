@@ -44,6 +44,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Algorithms\BreathFirst.cs" />
+    <Compile Include="Cell.cs" />
+    <Compile Include="PathFinder.cs" />
     <Compile Include="BreadCrumb.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
