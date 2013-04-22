@@ -8,7 +8,7 @@
     <ProjectGuid>{26A2DD37-DAF6-4D43-9BBC-E01BE6E452C5}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ariadne_skein</RootNamespace>
+    <RootNamespace>Ariadne_Skein</RootNamespace>
     <AssemblyName>ariadne-skein</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>

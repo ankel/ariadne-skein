@@ -5,7 +5,7 @@ using System.Text;
 using System.Drawing;
 
 namespace Ariadne_Skein {
-    abstract class PathFinder {
+    public abstract class PathFinder {
         protected int maxX, maxY;
 
         protected const char START    = 's';

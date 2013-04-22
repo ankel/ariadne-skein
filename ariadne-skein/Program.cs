@@ -5,7 +5,7 @@ using System.Text;
 using System.Drawing;
 
 namespace Ariadne_Skein {
-    class Program {
+    public class Program {
         static void Main ( string[] args ) {
             // read input file
             System.IO.StreamReader input = new System.IO.StreamReader (args[0]);

@@ -13,7 +13,7 @@ namespace Ariadne_Skein {
     /// 
     /// *Style point: make enqueue fast.
     /// </summary>
-    class PriorityQueue<T> : IEnumerable<T>, ICollection, IEnumerable where T : IComparable<T> {
+    public class PriorityQueue<T> : IEnumerable<T>, ICollection, IEnumerable where T : IComparable<T> {
         LinkedList<T> list;
         object l;
 
@@ -54,11 +54,12 @@ namespace Ariadne_Skein {
             }
 
             LinkedListNode<T> node = list.First;
-            while ( node.Next != null ) {
+            while ( node != null ) {
                 if ( node.Value.CompareTo (toBeInserted) > 0 ) {    // look for the first object that is 'greater than' toBeInserted
                     list.AddBefore (node, toBeInserted);
                     return;
                 }
+                node = node.Next;
             }
 
             // didn't return
@@ -91,7 +92,7 @@ namespace Ariadne_Skein {
             }
         }
 
-        int ICollection.Count {
+        public int Count {
             get { return list.Count; }
         }
 

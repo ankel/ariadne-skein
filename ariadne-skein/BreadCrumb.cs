@@ -6,7 +6,7 @@ using System.Drawing;
 
 namespace Ariadne_Skein
 {
-    class BreadCrumb
+    public class BreadCrumb
     {
         public Point Current
         {
