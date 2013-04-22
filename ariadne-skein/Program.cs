@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 
-namespace ariadne_skein {
+namespace Ariadne_Skein {
     class Program {
         static void Main ( string[] args ) {
             // read input file

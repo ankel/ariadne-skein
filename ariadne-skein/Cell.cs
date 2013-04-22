@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 
-namespace ariadne_skein {
+namespace Ariadne_Skein {
     class Cell : IComparable<Cell> {
         public Point Current {
             get;

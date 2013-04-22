@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Collections;
 
-namespace ariadne_skein {
+namespace Ariadne_Skein {
     /// <summary>
     /// This is the priority queue implemented for A* algorithm
     /// The queue returns item first by its values, then by order of it insertion.
