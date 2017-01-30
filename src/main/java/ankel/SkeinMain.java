@@ -5,8 +5,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -34,14 +36,17 @@ public class SkeinMain
 
     PriorityQueue<Node> frontier = new PriorityQueue<>();
 
+    Map<String, Node> visited = new HashMap<>();
+
     if (!dictionary.contains(args[1]) || !dictionary.contains(args[2]))
     {
       log.info("Not possible, either start or destination are not in the dictionary");
     }
     else
     {
-
-      frontier.add(new Node(args[1], Collections.emptyList(), 0));
+      final Node firstNode = new Node(args[1], Collections.emptyList(), 0);
+      frontier.add(firstNode);
+      visited.put(args[1], firstNode);
 
       boolean found = false;
 
@@ -58,6 +63,8 @@ public class SkeinMain
         newNodes.addAll(action.remove(node));
         newNodes.addAll(action.swap(node));
 
+        List<Node> tobeRemoved = new ArrayList<>();
+
         for (final Node n : newNodes)
         {
           if (n.getCurrent().equals(args[2]))
@@ -67,9 +74,30 @@ public class SkeinMain
             found = true;
             break bigLoop;
           }
+          else
+          {
+            final Node visitedNode = visited.get(n.getCurrent());
+
+            if (visitedNode != null)
+            {
+              // we have seen this, check if we have found a better way to arrive here.
+              if (visitedNode.getSoFar().size() > n.getSoFar().size())
+              {
+                frontier.remove(visitedNode);
+              }
+              else
+              {
+                tobeRemoved.add(n);
+              }
+            }
+            else
+            {
+              visited.put(n.getCurrent(), n);
+            }
+          }
         }
 
-//        Collections.shuffle(newNodes);
+        tobeRemoved.forEach(newNodes::remove);
 
         frontier.addAll(newNodes);
       }
