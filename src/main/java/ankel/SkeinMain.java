@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 
 import lombok.extern.slf4j.Slf4j;
 
-import ankel.cost.ACostCalculator;
+import ankel.cost.AStarCostCalculator;
 
 /**
  * @author Binh Tran
@@ -27,42 +27,57 @@ public class SkeinMain
 
     final Set<String> dictionary = readDict(args[0]);
 
-    Action action = new Action(dictionary, new ACostCalculator(), Action.ALPHABET);
+    CostCalculator calculator = new AStarCostCalculator(args[2]);
+//    CostCalculator calculator = new ACostCalculator();
+
+    Action action = new Action(dictionary, calculator, Action.ALPHABET);
 
     PriorityQueue<Node> frontier = new PriorityQueue<>();
 
-    frontier.add(new Node(args[1], Collections.emptyList(), 0));
-
-    boolean found = false;
-
-    bigLoop:
-    while (!frontier.isEmpty())
+    if (!dictionary.contains(args[1]) || !dictionary.contains(args[2]))
     {
-      final Node node = frontier.remove();
+      log.info("Not possible, either start or destination are not in the dictionary");
+    }
+    else
+    {
 
-      List<Node> newNodes = new ArrayList<>();
+      frontier.add(new Node(args[1], Collections.emptyList(), 0));
 
-      newNodes.addAll(action.add(node));
-      newNodes.addAll(action.remove(node));
-      newNodes.addAll(action.swap(node));
+      boolean found = false;
 
-      for (final Node n : newNodes)
+      bigLoop:
+      while (!frontier.isEmpty())
       {
-        if (n.getCurrent().equals(args[2]))
+        final Node node = frontier.remove();
+
+//        log.info("Current [{}] cost: [{}]", node.getCurrent(), node.getCost());
+
+        List<Node> newNodes = new ArrayList<>();
+
+        newNodes.addAll(action.add(node));
+        newNodes.addAll(action.remove(node));
+        newNodes.addAll(action.swap(node));
+
+        for (final Node n : newNodes)
         {
-          n.getSoFar().add(args[2]);
-          log.info("Found one path: {}", n.getSoFar());
-          found = true;
-          break bigLoop;
+          if (n.getCurrent().equals(args[2]))
+          {
+            n.getSoFar().add(args[2]);
+            log.info("Found one path: {}", n.getSoFar());
+            found = true;
+            break bigLoop;
+          }
         }
+
+//        Collections.shuffle(newNodes);
+
+        frontier.addAll(newNodes);
       }
 
-      frontier.addAll(newNodes);
-    }
-
-    if (!found)
-    {
-      log.info("Cannot find any path");
+      if (!found)
+      {
+        log.info("Cannot find any path");
+      }
     }
     log.info("Took: [{}ms]", System.currentTimeMillis() - start);
   }
